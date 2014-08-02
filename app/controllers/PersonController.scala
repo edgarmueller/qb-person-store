@@ -27,7 +27,6 @@ object PersonController extends MongoController with QBCrudController {
     Action.async {
       collection.findOne(Json.obj()).map { oneOption =>
         Ok(Json.obj(
-          //          "schema" -> Json.toJson(BlogSchema.blogSchema),
           "viewModel" -> Json.toJson(PersonSchema.viewSchema),
           "data" -> oneOption.fold[JsValue] {
             JsUndefined("No data available")

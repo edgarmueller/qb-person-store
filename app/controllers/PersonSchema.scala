@@ -2,22 +2,42 @@ package controllers
 
 import org.qbproject.api.schema.QBSchema._
 import org.qbproject.api.mongo.MongoSchemaExtensions._
-import controllers.QBView.{QBViewModel, QBViewPath, QBViewControl}
+import controllers.QBView._
 
 object PersonSchema {
 
   val personSchema = qbClass(
     "id" -> objectId,
-    "name" -> qbString,
+    "firstName" -> qbString,
+    "lastName" -> qbString,
     "nationality" -> qbString,
-    "address" -> qbString
+    "gender" -> qbEnum("Male", "Female"),
+    "address" -> qbString,
+    "age" -> qbInteger,
+    "weight" -> qbNumber,
+    "active" -> qbBoolean,
+    "registrationTime" -> qbDateTime
   )
 
   val viewSchema = QBViewModel(
     personSchema,
-    QBViewControl(QBViewPath("name")),
-    QBViewControl(QBViewPath("nationality")),
-    QBViewControl(QBViewPath("address")
+    QBHorizontalLayout(
+      QBVerticalLayout(
+        QBLabel("Name Details"),
+        QBViewControl("First Name", QBViewPath("firstName")),
+        QBViewControl("Last Name", QBViewPath("lastName")),
+        QBViewControl("Gender", QBViewPath("gender"))
+      ),
+      QBVerticalLayout(
+        QBGroup("Optional data",
+          QBViewControl("Age", QBViewPath("age")),
+          QBViewControl("Weight", QBViewPath("weight")),
+          QBHorizontalLayout(
+            QBViewControl("Active", QBViewPath("active")),
+            QBViewControl("Time of registration", QBViewPath("registrationTime"))
+          )
+        )
+      )
     )
   )
 }
